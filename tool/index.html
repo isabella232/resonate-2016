@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+	<body>
+		<link rel="stylesheet" href="js/libs/codemirror/codemirror.css">
+		<link rel="stylesheet" href="js/libs/codemirror/theme/monokai.css">
+		<script src="js/libs/codemirror/codemirror.js"></script>
+		<script src="js/libs/codemirror/mode/glsl.js"></script>
+
+		<script src="js/libs/three.js"></script>
+
+		<script src="js/libs/GPGPU.js"></script>
+		<script src="js/libs/gpgpu/CopyShader.js"></script>
+
+		<link rel="stylesheet" href="css/main.css">
+		<script src="js/Editor.js"></script>
+		<script src="js/Render.js"></script>
+
+		<script id="vs-simulation" type="x-shader">
+varying vec2 vUv;
+
+void main() {
+	vUv = vec2( uv.x, 1.0 - uv.y );
+	gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+}
+		</script>
+
+		<script id="fs-simulation" type="x-shader">
+uniform float opacity;
+
+uniform sampler2D tPositions;
+uniform sampler2D tOrigins;
+
+uniform float timer;
+
+varying vec2 vUv;
+
+/*
+float rand(vec2 co){
+	return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
+}
+*/
+
+void main() {
+
+	vec4 pos = texture2D( tPositions, vUv );
+
+	if ( pos.w < 0.0 ) {
+
+		vec4 sample = texture2D( tOrigins, vUv );
+		pos.xyz = sample.xyz;
+		pos.w = sample.w * opacity;
+
+	} else {
+
+		float x = pos.x + timer * 5.0;
+		float y = pos.y;
+		float z = pos.z + timer * 4.0;
+
+		pos.x += sin( y * 0.133 ) * cos( z * 0.137 ) * 0.2;
+		pos.y += sin( x * 0.135 ) * cos( x * 0.135 ) * 0.2;
+		pos.z += sin( x * 0.137 ) * cos( y * 0.133 ) * 0.2;
+		pos.w -= 0.001;
+
+	}
+
+	gl_FragColor = pos;
+
+}
+		</script>
+
+		<script id="vs-render" type="x-shader">
+uniform sampler2D map;
+
+uniform float size;
+
+varying vec3 vPosition;
+// varying float opacity;
+
+void main() {
+
+	vec2 uv = position.xy + vec2( 0.5 / size, 0.5 / size );
+
+	vec4 data = texture2D( map, uv );
+
+	vPosition = data.xyz;
+	// opacity = data.w;
+
+ vec4 mvPosition = modelViewMatrix * vec4( vPosition, 1.0 );
+
+	gl_PointSize = 2.0 * ( 50.0 / - mvPosition.z ); // TODO 50.0
+	gl_Position = projectionMatrix * mvPosition;
+
+}
+		</script>
+
+		<script id="fs-render" type="x-shader">
+uniform vec3 pointColor;
+
+varying vec3 vPosition;
+// varying float opacity;
+
+void main() {
+
+	gl_FragColor = vec4( pointColor + vPosition * 0.2, 0.5 /* opacity */ );
+
+}
+		</script>
+
+		<script>
+
+			var shader1 = {
+				vertex: document.getElementById( 'vs-simulation' ).textContent.trim(),
+				fragment: document.getElementById( 'fs-simulation' ).textContent.trim()
+			};
+
+			var shader2 = {
+				vertex: document.getElementById( 'vs-render' ).textContent.trim(),
+				fragment: document.getElementById( 'fs-render' ).textContent.trim()
+			};
+
+			//
+
+			var editor1 = new Editor( shader1.fragment );
+			editor1.dom.style.top = '0';
+			editor1.dom.style.left = '0';
+			editor1.dom.style.width = '50%';
+			editor1.dom.style.height = '50%';
+			editor1.onChange( function ( string ) {
+
+				shader1.fragment = string;
+				render.setSimulationShader( shader1 );
+
+			} );
+
+			var editor2 = new Editor( shader2.fragment );
+			editor2.dom.style.top = '50%';
+			editor2.dom.style.left = '0';
+			editor2.dom.style.width = '50%';
+			editor2.dom.style.height = '50%';
+			editor2.dom.style.borderTop = '1px solid #333';
+			editor2.onChange( function ( string ) {
+
+				shader2.fragment = string;
+				render.setRenderShader( shader2 );
+
+			} );
+
+			var render = new Render();
+			render.dom.style.top = '0';
+			render.dom.style.left = '50%';
+			render.dom.style.width = '50%';
+			render.dom.style.height = '100%';
+			render.setSimulationShader( shader1 );
+			render.setRenderShader( shader2 );
+			render.resize();
+
+			window.addEventListener( 'resize', function ( event ) {
+
+				render.resize();
+
+			}, false );
+
+			//
+
+			function animate() {
+
+				render.render();
+				requestAnimationFrame( animate );
+
+			}
+
+			animate();
+
+		</script>
+	</body>
+</html>
