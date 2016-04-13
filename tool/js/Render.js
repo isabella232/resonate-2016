@@ -109,15 +109,18 @@ var Render = function () {
 	points.frustumCulled = false;
 	scene.add( points );
 
-	/*
 	// debug
 
 	var mesh = new THREE.Mesh(
 		new THREE.PlaneGeometry( 10, 10 ),
 		new THREE.MeshBasicMaterial( { map: renderTexture1 } )
 	);
-	scene.add( mesh );
-	*/
+
+	if ( location.search === '?debug' ) {
+
+		scene.add( mesh );
+
+	}
 
 	//
 
@@ -186,7 +189,7 @@ var Render = function () {
 		},
 		setAudioTexture: function( t ) {
 			simulationMaterial.uniforms.tFFT.value = t;
-			//mesh.material.map = t;
+			// mesh.material.map = t;
 		}
 	};
 

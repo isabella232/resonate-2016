@@ -17,26 +17,13 @@ var Audio = function () {
 	function init() {
 
 		audio = document.createElement( 'audio' );
-
+		audio.src = 'assets/track.ogg';
 		audio.controls = true;
 		audio.className = 'player';
 		document.body.appendChild( audio );
 
-		audio.addEventListener( 'canplay', onAudioReady );
-
-		audio.src = 'assets/track.ogg';
-	
-		function onAudioReady() {
-
-			audio.removeEventListener( 'canplay', onAudioReady );
-			audio.pause();
-
-			var audioSource = audioContext.createMediaElementSource( audio );
-			audioSource.connect( analyser );
-
-			audio.play();
-
-		}
+		var audioSource = audioContext.createMediaElementSource( audio );
+		audioSource.connect( analyser );
 
 	}
 

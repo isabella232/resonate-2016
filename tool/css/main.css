@@ -15,10 +15,8 @@ body {
 	height: 100%;
 }
 
-audio{
+audio {
 	position: absolute;
-	left: 50%;
-	right: 0;
-	width: 50%;
+	left: calc(75% - 150px);
 	bottom: 10px;
 }

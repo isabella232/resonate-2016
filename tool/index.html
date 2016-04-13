@@ -48,6 +48,7 @@ void main() {
 
 	vec4 pos = texture2D( tPositions, vUv );
 
+	// if ( pos.w <= 0.0 && texture2D( tFFT, vec2( 0.1 ) ).r > 0.7 ) {
 	if ( pos.w < 0.0 ) {
 
 		vec4 sample = texture2D( tOrigins, vUv );
