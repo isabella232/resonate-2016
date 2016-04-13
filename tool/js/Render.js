@@ -10,8 +10,10 @@ var Render = function () {
 
 	//
 
-	var camera = new THREE.PerspectiveCamera( 50, 1, 0.01, 100 );
+	var camera = new THREE.PerspectiveCamera( 50, 1, 0.01, 1000 );
 	camera.position.z = 50;
+
+	var controls = new THREE.TrackballControls( camera, renderer.domElement );
 
 	var scene = new THREE.Scene();
 
@@ -106,6 +108,7 @@ var Render = function () {
 	points.frustumCulled = false;
 	scene.add( points );
 
+	/*
 	// debug
 
 	var mesh = new THREE.Mesh(
@@ -113,6 +116,7 @@ var Render = function () {
 		new THREE.MeshBasicMaterial( { map: renderTexture1 } )
 	);
 	scene.add( mesh );
+	*/
 
 	//
 
@@ -135,12 +139,6 @@ var Render = function () {
 
 		var time = performance.now() / 1000;
 
-		/*
-		camera.position.x = Math.cos( time ) * 50;
-		camera.position.z = Math.sin( time ) * 50;
-		camera.lookAt( scene.position );
-		*/
-
 		simulationMaterial.uniforms.timer.value = time;
 
 		if ( frame % 2 === 0 ) {
@@ -158,6 +156,8 @@ var Render = function () {
 			material.uniforms.map.value = renderTexture1;
 
 		}
+
+		controls.update();
 
 		renderer.render( scene, camera );
 
