@@ -186,7 +186,7 @@ var Render = function () {
 		},
 		setAudioTexture: function( t ) {
 			simulationMaterial.uniforms.tFFT.value = t;
-			mesh.material.map = t;
+			//mesh.material.map = t;
 		}
 	};
 
