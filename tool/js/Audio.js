@@ -9,9 +9,7 @@ var Audio = function () {
 	var frequencyData = new Uint8Array( analyser.fftSize );
 	analyser.connect( audioContext.destination );
 
-	var spectrumData = new Uint8Array( frequencyData.length * 1 * 4 );
-
-	var spectrumTexture = new THREE.DataTexture( spectrumData, frequencyData.length, 1, THREE.RGBAFormat );
+	var spectrumTexture = new THREE.DataTexture( frequencyData, .5 * frequencyData.length, 1, THREE.LuminanceFormat );
 	spectrumTexture.minFilter = THREE.NearestFilter;
 	spectrumTexture.magFilter = THREE.NearestFilter;
 	spectrumTexture.needsUpdate = true;
@@ -46,14 +44,6 @@ var Audio = function () {
 	function update() {
 
 		analyser.getByteFrequencyData( frequencyData );
-		var p = 0;
-		var pf = 0;
-		for( var pf = 0; pf < frequencyData.length; pf++ ) {
-			f = frequencyData[ pf ];
-			spectrumData[ p ] = Math.random() * 255;//255 * f;
-			p += 4;
-
-		}
 		spectrumTexture.needsUpdate = true;
 
 	}
