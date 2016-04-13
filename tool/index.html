@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 	<body>
+
 		<link rel="stylesheet" href="js/libs/codemirror/codemirror.css">
 		<link rel="stylesheet" href="js/libs/codemirror/theme/monokai.css">
 		<script src="js/libs/codemirror/codemirror.js"></script>
@@ -14,6 +15,7 @@
 		<link rel="stylesheet" href="css/main.css">
 		<script src="js/Editor.js"></script>
 		<script src="js/Render.js"></script>
+		<script src="js/Audio.js"></script>
 
 		<script id="vs-simulation" type="x-shader">
 varying vec2 vUv;
@@ -29,6 +31,7 @@ uniform float opacity;
 
 uniform sampler2D tPositions;
 uniform sampler2D tOrigins;
+uniform sampler2D tFFT;
 
 uniform float timer;
 
@@ -48,6 +51,7 @@ void main() {
 
 		vec4 sample = texture2D( tOrigins, vUv );
 		pos.xyz = sample.xyz;
+		pos.x += texture2D( tFFT, vec2( 0. ) ).r;
 		pos.w = sample.w * opacity;
 
 	} else {
@@ -75,10 +79,12 @@ uniform float size;
 
 varying vec3 vPosition;
 // varying float opacity;
+varying vec2 vUv;
 
 void main() {
 
 	vec2 uv = position.xy + vec2( 0.5 / size, 0.5 / size );
+	vUv = uv;
 
 	vec4 data = texture2D( map, uv );
 
@@ -101,6 +107,7 @@ varying vec3 vPosition;
 
 void main() {
 
+	// float v = 1. -  length( gl_PointCoord.xy - .5 );
 	gl_FragColor = vec4( pointColor + vPosition * 0.2, 0.5 /* opacity */ );
 
 }
@@ -154,6 +161,8 @@ void main() {
 			render.setRenderShader( shader2 );
 			render.resize();
 
+			var audio = new Audio();
+
 			window.addEventListener( 'resize', function ( event ) {
 
 				render.resize();
@@ -164,12 +173,22 @@ void main() {
 
 			function animate() {
 
+				audio.update();
+
 				render.render();
 				requestAnimationFrame( animate );
 
 			}
 
-			animate();
+			function init() {
+
+				audio.init();
+				render.setAudioTexture( audio.getSpectrumTexture() )
+				animate();
+
+			}
+
+			window.addEventListener( 'load', init );
 
 		</script>
 	</body>

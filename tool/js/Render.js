@@ -66,6 +66,7 @@ var Render = function () {
 		uniforms: {
 			tPositions: { type: "t", value: renderTexture1 },
 			tOrigins: { type: "t", value: originsTexture },
+			tFFT: { type: "t", value: new THREE.Texture() },
 			opacity: { type: "f", value: 1 },
 			timer: { type: "f", value: 0 }
 		}
@@ -182,6 +183,10 @@ var Render = function () {
 			simulationMaterial.fragmentShader = shader.fragment;
 			simulationMaterial.needsUpdate = true;
 
+		},
+		setAudioTexture: function( t ) {
+			simulationMaterial.uniforms.tFFT.value = t;
+			mesh.material.map = t;
 		}
 	};
 
