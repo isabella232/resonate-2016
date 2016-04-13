@@ -14,3 +14,11 @@ body {
 .CodeMirror {
 	height: 100%;
 }
+
+audio{
+	position: absolute;
+	left: 50%;
+	right: 0;
+	width: 50%;
+	bottom: 10px;
+}

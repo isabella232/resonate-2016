@@ -20,12 +20,11 @@ var Audio = function () {
 
 		audio.controls = true;
 		audio.className = 'player';
-		audio.style.display = 'none';
 		document.body.appendChild( audio );
 
 		audio.addEventListener( 'canplay', onAudioReady );
 
-		audio.src = 'assets/track.mp3';
+		audio.src = 'assets/track.ogg';
 	
 		function onAudioReady() {
 
