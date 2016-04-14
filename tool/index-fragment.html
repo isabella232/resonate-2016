@@ -176,7 +176,26 @@ void main() {
 			render.dom.style.height = '100%';
 			render.setSimulationShader( shaders[ 0 ] );
 			render.setRenderShader( shaders[ 1 ] );
+			document.body.appendChild( render.dom );
+
 			render.resize();
+
+			var exportButton = document.createElement( 'button' );
+			exportButton.style.position = 'absolute';
+			exportButton.style.top = '10px';
+			exportButton.style.right = '10px';
+			exportButton.textContent = 'EXPORT';
+			exportButton.addEventListener( 'click', function ( event ) {
+
+				var output = JSON.stringify( shaders, null, '\t' );
+
+				var blob = new Blob( [ output ], { type: 'text/plain' } );
+				var objectURL = URL.createObjectURL( blob );
+
+				window.open( objectURL, '_blank' );
+
+			} );
+			document.body.appendChild( exportButton );
 
 			var audio = new Audio();
 

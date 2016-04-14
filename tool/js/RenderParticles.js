@@ -2,7 +2,6 @@ var RenderParticles = function () {
 
 	var dom = document.createElement( 'div' );
 	dom.style.position = 'absolute';
-	document.body.appendChild( dom );
 
 	var renderer = new THREE.WebGLRenderer();
 	renderer.setPixelRatio( window.devicePixelRatio );

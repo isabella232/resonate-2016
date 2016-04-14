@@ -20,3 +20,9 @@ audio {
 	left: calc(75% - 150px);
 	bottom: 10px;
 }
+
+button {
+	padding: 6px 10px;
+	border: 0px;
+	opacity: 0.5;
+}
