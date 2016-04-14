@@ -12,7 +12,17 @@ var RenderParticles = function () {
 	var camera = new THREE.PerspectiveCamera( 50, 1, 0.01, 1000 );
 	camera.position.z = 50;
 
-	var controls = new THREE.TrackballControls( camera, renderer.domElement );
+	var controls;
+
+	controls = new THREE.TrackballControls( camera, renderer.domElement );
+
+	setTimeout( function () {
+
+		// HACK Renderer is not in the dom yet
+
+		controls = new THREE.TrackballControls( camera, renderer.domElement );
+
+	}, 0 );
 
 	var scene = new THREE.Scene();
 

@@ -49,23 +49,14 @@ void main() {
 
 	vec4 pos = texture2D( tPositions, vUv );
 
-	// if ( pos.w <= 0.0 && texture2D( tFFT, vec2( 0.1 ) ).r > 0.7 ) {
 	if ( pos.w < 0.0 ) {
 
 		vec4 sample = texture2D( tOrigins, vUv );
 		pos.xyz = sample.xyz;
-		pos.x += texture2D( tFFT, vec2( 0. ) ).r;
 		pos.w = sample.w;
 
 	} else {
 
-		float x = pos.x + timer * 5.0;
-		float y = pos.y;
-		float z = pos.z + timer * 4.0;
-
-		pos.x += sin( y * 0.133 ) * cos( z * 0.137 ) * 0.2;
-		pos.y += sin( x * 0.135 ) * cos( x * 0.135 ) * 0.2;
-		pos.z += sin( x * 0.137 ) * cos( y * 0.133 ) * 0.2;
 		pos.w -= 0.001;
 
 	}
@@ -106,8 +97,7 @@ varying vec3 vPosition;
 
 void main() {
 
-	// float v = 1.0 - length( gl_PointCoord.xy - 0.5 ) * 2.0;
-	gl_FragColor = vec4( vec3( 1.0 ) + vPosition * 0.2, 0.5 );
+	gl_FragColor = vec4( 1.0, 1.0, 1.0, 0.5 );
 
 }
 		</script>
@@ -238,6 +228,33 @@ void main() {
 			}
 
 			window.addEventListener( 'load', init );
+
+			/*
+			document.addEventListener( 'dragover', function ( event ) {
+
+				event.preventDefault();
+				event.dataTransfer.dropEffect = 'copy';
+
+			}, false );
+
+			document.addEventListener( 'drop', function ( event ) {
+
+				event.preventDefault();
+
+				if ( event.dataTransfer.files.length > 0 ) {
+
+					var reader = new FileReader();
+					reader.addEventListener( 'load', function ( event ) {
+
+						shaders = JSON.parse( event.target.result );
+
+					}, false );
+					reader.readAsText( event.dataTransfer.files[ 0 ] );
+
+				}
+
+			}, false );
+			*/
 
 		</script>
 	</body>
