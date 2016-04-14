@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
+	<head>
+		<title>Resonate 2016 - Fragment</title>
+	</head>
 	<body>
 
 		<link rel="stylesheet" href="js/libs/codemirror/codemirror.css">
@@ -14,9 +17,9 @@
 		<script src="js/libs/gpgpu/CopyShader.js"></script>
 
 		<link rel="stylesheet" href="css/main.css">
-		<script src="js/Editor.js"></script>
-		<script src="js/Render.js"></script>
 		<script src="js/Audio.js"></script>
+		<script src="js/Editor.js"></script>
+		<script src="js/RenderFragment.js"></script>
 
 		<script id="vs-simulation" type="x-shader">
 varying vec2 vUv;
@@ -117,13 +120,13 @@ void main() {
 
 				if ( confirm( 'Any unsaved data will be lost. Are you sure?' ) ) {
 
-					localStorage.clear();
+					localStorage.removeItem( 'glsl-fragment' )
 
 				}
 
 			}
 
-			if ( localStorage.getItem( 'shaders' ) === null ) {
+			if ( localStorage.getItem( 'glsl-fragment' ) === null ) {
 
 				var shaders = [ {
 
@@ -139,32 +142,17 @@ void main() {
 
 			} else {
 
-				var shaders = JSON.parse( localStorage.getItem( 'shaders' ) );
+				var shaders = JSON.parse( localStorage.getItem( 'glsl-fragment' ) );
 
 			}
 
 			//
 
-			var editor = new Editor( 'Simulation', shaders[ 0 ].fragment );
+			var editor = new Editor( 'Render', shaders[ 1 ].fragment );
 			editor.dom.style.top = '0';
 			editor.dom.style.left = '0';
 			editor.dom.style.width = '50%';
-			editor.dom.style.height = '50%';
-			editor.onChange( function ( string ) {
-
-				shaders[ 0 ].fragment = string;
-				render.setSimulationShader( shaders[ 0 ] );
-
-				save();
-
-			} );
-			document.body.appendChild( editor.dom );
-
-			var editor = new Editor( 'Display', shaders[ 1 ].fragment );
-			editor.dom.style.top = '50%';
-			editor.dom.style.left = '0';
-			editor.dom.style.width = '50%';
-			editor.dom.style.height = '50%';
+			editor.dom.style.height = '100%';
 			editor.onChange( function ( string ) {
 
 				shaders[ 1 ].fragment = string;
@@ -177,11 +165,11 @@ void main() {
 
 			function save() {
 
-				localStorage.setItem( 'shaders', JSON.stringify( shaders ) );
+				localStorage.setItem( 'glsl-fragment', JSON.stringify( shaders ) );
 
 			}
 
-			var render = new Render();
+			var render = new RenderFragment();
 			render.dom.style.top = '0';
 			render.dom.style.left = '50%';
 			render.dom.style.width = '50%';

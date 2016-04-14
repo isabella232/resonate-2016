@@ -1,4 +1,4 @@
-var Render = function () {
+var RenderFragment = function () {
 
 	var dom = document.createElement( 'div' );
 	dom.style.position = 'absolute';
