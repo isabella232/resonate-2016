@@ -39,22 +39,18 @@ uniform float timer;
 
 varying vec2 vUv;
 
-/*
 float rand(vec2 co){
 	return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
 }
-*/
 
 void main() {
 
 	vec4 pos = texture2D( tPositions, vUv );
 
-	// if ( pos.w <= 0.0 && texture2D( tFFT, vec2( 0.1 ) ).r > 0.7 ) {
-	if ( pos.w < 0.0 ) {
+	if ( pos.w <= 0.0 && rand( pos.xy ) > 0.95 ) {
 
 		vec4 sample = texture2D( tOrigins, vUv );
-		pos.xyz = sample.xyz;
-		pos.x += texture2D( tFFT, vec2( 0. ) ).r;
+		pos.xyz = sample.xyz * rand( pos.xy );
 		pos.w = sample.w;
 
 	} else {
@@ -66,7 +62,7 @@ void main() {
 		pos.x += sin( y * 0.133 ) * cos( z * 0.137 ) * 0.2;
 		pos.y += sin( x * 0.135 ) * cos( x * 0.135 ) * 0.2;
 		pos.z += sin( x * 0.137 ) * cos( y * 0.133 ) * 0.2;
-		pos.w -= 0.001;
+		pos.w -= 0.01;
 
 	}
 
@@ -106,8 +102,9 @@ varying vec3 vPosition;
 
 void main() {
 
-	// float v = 1.0 - length( gl_PointCoord.xy - 0.5 ) * 2.0;
-	gl_FragColor = vec4( vec3( 1.0 ) + vPosition * 0.2, 0.5 );
+	float v = 1.0 - length( gl_PointCoord.xy - 0.5 ) * 2.0;
+	gl_FragColor = vec4( min( vec3( v ), vPosition * 0.02 ), 0.75 );
+	gl_FragColor.x = texture2D( tFFT, vec2( 0.9 ) ).r;
 
 }
 		</script>
@@ -238,6 +235,33 @@ void main() {
 			}
 
 			window.addEventListener( 'load', init );
+
+			/*
+			document.addEventListener( 'dragover', function ( event ) {
+
+				event.preventDefault();
+				event.dataTransfer.dropEffect = 'copy';
+
+			}, false );
+
+			document.addEventListener( 'drop', function ( event ) {
+
+				event.preventDefault();
+
+				if ( event.dataTransfer.files.length > 0 ) {
+
+					var reader = new FileReader();
+					reader.addEventListener( 'load', function ( event ) {
+
+						shaders = JSON.parse( event.target.result );
+
+					}, false );
+					reader.readAsText( event.dataTransfer.files[ 0 ] );
+
+				}
+
+			}, false );
+			*/
 
 		</script>
 	</body>

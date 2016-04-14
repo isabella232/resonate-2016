@@ -18,6 +18,7 @@ var Audio = function () {
 
 		audio = document.createElement( 'audio' );
 		audio.src = 'assets/track.ogg';
+		audio.autoplay = true;
 		audio.controls = true;
 		audio.className = 'player';
 		document.body.appendChild( audio );
