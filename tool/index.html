@@ -80,7 +80,6 @@ uniform sampler2D map;
 uniform float size;
 
 varying vec3 vPosition;
-// varying float opacity;
 varying vec2 vUv;
 
 void main() {
@@ -91,7 +90,6 @@ void main() {
 	vec4 data = texture2D( map, uv );
 
 	vPosition = data.xyz;
-	// opacity = data.w;
 
  vec4 mvPosition = modelViewMatrix * vec4( vPosition, 1.0 );
 
@@ -102,46 +100,66 @@ void main() {
 		</script>
 
 		<script id="fs-render" type="x-shader">
-uniform vec3 pointColor;
-
+uniform sampler2D tFFT;
 varying vec3 vPosition;
-// varying float opacity;
 
 void main() {
 
-	// float v = 1. -  length( gl_PointCoord.xy - .5 );
-	gl_FragColor = vec4( pointColor + vPosition * 0.2, 0.5 /* opacity */ );
+	// float v = 1.0 - length( gl_PointCoord.xy - 0.5 ) * 2.0;
+	gl_FragColor = vec4( vec3( 1.0 ) + vPosition * 0.2, 0.5 );
 
 }
 		</script>
 
 		<script>
 
-			var shader1 = {
-				vertex: document.getElementById( 'vs-simulation' ).textContent.trim(),
-				fragment: document.getElementById( 'fs-simulation' ).textContent.trim()
-			};
+			if ( location.search === '?reset' ) {
 
-			var shader2 = {
-				vertex: document.getElementById( 'vs-render' ).textContent.trim(),
-				fragment: document.getElementById( 'fs-render' ).textContent.trim()
-			};
+				if ( confirm( 'Any unsaved data will be lost. Are you sure?' ) ) {
+
+					localStorage.clear();
+
+				}
+
+			}
+
+			if ( localStorage.getItem( 'shaders' ) === null ) {
+
+				var shaders = [ {
+
+					vertex: document.getElementById( 'vs-simulation' ).textContent.trim(),
+					fragment: document.getElementById( 'fs-simulation' ).textContent.trim()
+
+				}, {
+
+					vertex: document.getElementById( 'vs-render' ).textContent.trim(),
+					fragment: document.getElementById( 'fs-render' ).textContent.trim()
+
+				} ];
+
+			} else {
+
+				var shaders = JSON.parse( localStorage.getItem( 'shaders' ) );
+
+			}
 
 			//
 
-			var editor1 = new Editor( shader1.fragment );
+			var editor1 = new Editor( shaders[ 0 ].fragment );
 			editor1.dom.style.top = '0';
 			editor1.dom.style.left = '0';
 			editor1.dom.style.width = '50%';
 			editor1.dom.style.height = '50%';
 			editor1.onChange( function ( string ) {
 
-				shader1.fragment = string;
-				render.setSimulationShader( shader1 );
+				shaders[ 0 ].fragment = string;
+				render.setSimulationShader( shaders[ 0 ] );
+
+				save();
 
 			} );
 
-			var editor2 = new Editor( shader2.fragment );
+			var editor2 = new Editor( shaders[ 1 ].fragment );
 			editor2.dom.style.top = '50%';
 			editor2.dom.style.left = '0';
 			editor2.dom.style.width = '50%';
@@ -149,18 +167,26 @@ void main() {
 			editor2.dom.style.borderTop = '1px solid #333';
 			editor2.onChange( function ( string ) {
 
-				shader2.fragment = string;
-				render.setRenderShader( shader2 );
+				shaders[ 1 ].fragment = string;
+				render.setRenderShader( shaders[ 1 ] );
+
+				save();
 
 			} );
+
+			function save() {
+
+				localStorage.setItem( 'shaders', JSON.stringify( shaders ) );
+
+			}
 
 			var render = new Render();
 			render.dom.style.top = '0';
 			render.dom.style.left = '50%';
 			render.dom.style.width = '50%';
 			render.dom.style.height = '100%';
-			render.setSimulationShader( shader1 );
-			render.setRenderShader( shader2 );
+			render.setSimulationShader( shaders[ 0 ] );
+			render.setRenderShader( shaders[ 1 ] );
 			render.resize();
 
 			var audio = new Audio();

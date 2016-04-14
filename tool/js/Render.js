@@ -68,7 +68,7 @@ var Render = function () {
 		uniforms: {
 			tPositions: { type: "t", value: renderTexture1 },
 			tOrigins: { type: "t", value: originsTexture },
-			tFFT: { type: "t", value: new THREE.Texture() },
+			tFFT: { type: "t", value: null },
 			opacity: { type: "f", value: 1 },
 			timer: { type: "f", value: 0 }
 		}
@@ -93,10 +93,9 @@ var Render = function () {
 
 		uniforms: {
 
-			"map": { type: "t", value: renderTexture1 },
-			"size": { type: "f", value: size },
-
-			"pointColor": { type: "v3", value: new THREE.Vector3( 1, 1, 1 ) }
+			map: { type: "t", value: renderTexture1 },
+			size: { type: "f", value: size },
+			tFFT: { type: "t", value: null }
 
 		},
 		blending: THREE.AdditiveBlending,
@@ -189,6 +188,7 @@ var Render = function () {
 		},
 		setAudioTexture: function( t ) {
 			simulationMaterial.uniforms.tFFT.value = t;
+			material.uniforms.tFFT.value = t;
 			// mesh.material.map = t;
 		}
 	};
