@@ -31,8 +31,6 @@ void main() {
 		</script>
 
 		<script id="fs-simulation" type="x-shader">
-uniform float opacity;
-
 uniform sampler2D tPositions;
 uniform sampler2D tOrigins;
 uniform sampler2D tFFT;
@@ -57,7 +55,7 @@ void main() {
 		vec4 sample = texture2D( tOrigins, vUv );
 		pos.xyz = sample.xyz;
 		pos.x += texture2D( tFFT, vec2( 0. ) ).r;
-		pos.w = sample.w * opacity;
+		pos.w = sample.w;
 
 	} else {
 

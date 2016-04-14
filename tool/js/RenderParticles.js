@@ -68,7 +68,6 @@ var RenderParticles = function () {
 			tPositions: { type: "t", value: renderTexture1 },
 			tOrigins: { type: "t", value: originsTexture },
 			tFFT: { type: "t", value: null },
-			opacity: { type: "f", value: 1 },
 			timer: { type: "f", value: 0 }
 		}
 
