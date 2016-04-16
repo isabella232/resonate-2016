@@ -50,7 +50,7 @@ void main() {
 	if ( pos.w <= 0.0 && rand( pos.xy ) > 0.95 ) {
 
 		vec4 sample = texture2D( tOrigins, vUv );
-		pos.xyz = sample.xyz * rand( pos.xy );
+		pos.xyz = sample.xyz;
 		pos.w = sample.w;
 
 	} else {
@@ -59,9 +59,9 @@ void main() {
 		float y = pos.y;
 		float z = pos.z + timer * 4.0;
 
-		pos.x += sin( y * 0.133 ) * cos( z * 0.137 ) * 0.2;
-		pos.y += sin( x * 0.135 ) * cos( x * 0.135 ) * 0.2;
-		pos.z += sin( x * 0.137 ) * cos( y * 0.133 ) * 0.2;
+		pos.x += sin( y * 0.133 ) * cos( z * 0.137 ) * 0.15;
+		pos.y += sin( x * 0.135 ) * cos( x * 0.135 ) * 0.15;
+		pos.z += sin( x * 0.137 ) * cos( y * 0.133 ) * 0.15;
 		pos.w -= 0.005;
 
 	}
