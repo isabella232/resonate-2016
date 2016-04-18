@@ -102,9 +102,12 @@ varying vec3 vPosition;
 
 void main() {
 
-	float v = 1.0 - length( gl_PointCoord.xy - 0.5 ) * 2.0;
-	gl_FragColor = vec4( min( vec3( v ), vPosition * 0.02 ), 0.75 );
-	gl_FragColor.x = texture2D( tFFT, vec2( 0.9 ) ).r;
+	vec3 color = vPosition * 0.02;
+	color.x = texture2D( tFFT, vec2( 0.9 ) ).r;
+
+	vec3 circle = vec3( 1.0 - length( gl_PointCoord.xy - 0.5 ) * 2.0 );
+	
+	gl_FragColor = vec4( min( color, circle ), 0.75 );
 
 }
 		</script>
