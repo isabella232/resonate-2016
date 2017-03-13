@@ -38,9 +38,9 @@ void main( void ) {
 
 	vec2 position = ( gl_FragCoord.xy / resolution.xy );
 
-	// float r = texture2D( tFFT, vec2( position.y ) ).r;
+	float r = texture2D( tFFT, vec2( position.y ) ).r;
 
-	gl_FragColor = vec4( 1.0, 0.0, 0.0, 1.0 );
+	gl_FragColor = vec4( r, 0.0, 0.0, 1.0 );
 
 }
 		</script>
